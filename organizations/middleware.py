@@ -11,10 +11,9 @@ class DatabaseRouterMiddleware(MiddlewareMixin):
             try:
                 Organization = apps.get_model("organizations", "Organization")
                 organization = Organization.objects.get(name=org_name)
-                # db_obje =self.set_database(organization)
                 if org_name not in connections.databases:
                     connections.databases[org_name] = {
-                        "ENGINE": "django.db.backends.postgresql",
+                        "ENGINE": organization.db_engine,
                         "NAME": organization.db_name,
                         "USER": organization.db_user,
                         "PASSWORD": organization.db_password,
@@ -24,8 +23,8 @@ class DatabaseRouterMiddleware(MiddlewareMixin):
                         "TIME_ZONE": "UTC",
                         "ATOMIC_REQUESTS": True,
                         "CONN_HEALTH_CHECKS": True,
-                        "CONN_MAX_AGE": 600,  # Max age of database connections (in seconds)
-                        "AUTOCOMMIT": True,  # Set autocommit mode
+                        "CONN_MAX_AGE": 600,
+                        "AUTOCOMMIT": True,
                     }
 
             except Organization.DoesNotExist:

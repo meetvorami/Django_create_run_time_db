@@ -17,6 +17,7 @@ def register_organization(request):
         db_password = request.POST.get('db_password')
         db_host = request.POST.get('db_host')
         db_port = request.POST.get('db_port')
+        db_engine  = request.POST.get("db_engine")
 
         if not Organization.objects.filter(name=org_name).exists():
             Organization.objects.create(
@@ -25,12 +26,13 @@ def register_organization(request):
                 db_user=db_user,
                 db_password=db_password,
                 db_host=db_host,
-                db_port=db_port
+                db_port=db_port,
+                db_engine=db_engine
             )
 
             # Define the new database connection settings
             new_db_settings = {
-                'ENGINE': 'django.db.backends.postgresql',
+                'ENGINE': db_engine,
                 'NAME': db_name,
                 'USER': db_user,
                 'PASSWORD': db_password,
